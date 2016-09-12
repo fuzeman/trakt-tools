@@ -41,6 +41,7 @@ def cli(ctx, backup_dir):
 # Add commands
 cli.add_command(commands.backup_apply)
 cli.add_command(commands.backup_create)
+cli.add_command(commands.clean_duplicates)
 
 
 def get_prog():
