@@ -6,11 +6,6 @@ import os
 import sys
 
 
-# Setup logging
-logging.basicConfig(
-    level=logging.DEBUG
-)
-
 # Configure trakt.py
 # TODO use the trakt-tools api key
 Trakt.configuration.defaults.app(
@@ -26,10 +21,16 @@ Trakt.configuration.defaults.client(
 # Initialize command-line parser
 @click.group()
 @click.option('--backup-dir', default=None, help='Directory to store backups.')
+@click.option('--debug', is_flag=True, help='Enable debug logging')
 @click.pass_context
-def cli(ctx, backup_dir):
+def cli(ctx, backup_dir, debug):
     if not backup_dir:
         backup_dir = os.path.join(os.curdir, 'backups')
+
+    # Setup logging level
+    logging.basicConfig(
+        level=logging.DEBUG if debug else logging.INFO
+    )
 
     # Update context with absolute path for `backup_dir`
     ctx.backup_dir = os.path.abspath(backup_dir)
