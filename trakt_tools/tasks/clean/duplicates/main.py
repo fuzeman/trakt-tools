@@ -22,16 +22,17 @@ class CleanDuplicatesTask(Task):
 
         self.scanner = None
 
-    def run(self, token, backup=True):
+    def run(self, token, backup=None, review=None):
         log.debug('run() - token: %r', token)
 
         # Process backup download
         with Trakt.configuration.oauth(token=token):
             return self.process(
-                backup=backup
+                backup=backup,
+                review=review
             )
 
-    def process(self, profile=None, backup=True):
+    def process(self, profile=None, backup=None, review=None):
         log.debug('process()')
 
         if not profile:
@@ -48,6 +49,9 @@ class CleanDuplicatesTask(Task):
             exit(0)
 
         # Create backup
+        if backup is None:
+            backup = boolean_input('Create profile backup?', default=True)
+
         if backup and not self._create_backup(profile):
             print 'Unable to create backup'
             exit(1)
@@ -62,17 +66,20 @@ class CleanDuplicatesTask(Task):
             return False
 
         if len(self.scanner.shows) or len(self.scanner.movies):
-            print 'Found %d show(s) with duplicates' % len(self.scanner.shows)
-            print 'Found %d movie(s) with duplicates' % len(self.scanner.movies)
+            print 'Found %d show(s) and %d movie(s) with duplicates' % (
+                len(self.scanner.shows),
+                len(self.scanner.movies)
+            )
         else:
             print 'Unable to find any duplicates'
             exit(0)
 
         # Remove duplicates
-        return self.execute()
+        return self.execute(review)
 
-    def execute(self):
-        review = boolean_input('Would you like to review each action?', default=True)
+    def execute(self, review=None):
+        if review is None:
+            review = boolean_input('Review every action?', default=True)
 
         return False
 
