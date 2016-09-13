@@ -17,5 +17,8 @@ def backup_create(ctx, token):
             exit(1)
 
     # Download data from profile
-    task = CreateBackupTask(ctx.parent.backup_dir)
+    task = CreateBackupTask(
+        ctx.parent.backup_dir,
+        ctx.parent.rate_limit
+    )
     task.run(token)

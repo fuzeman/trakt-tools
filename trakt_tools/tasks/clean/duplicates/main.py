@@ -13,10 +13,11 @@ log = logging.getLogger(__name__)
 
 
 class CleanDuplicatesTask(Task):
-    def __init__(self, backup_dir, delta_max):
+    def __init__(self, backup_dir, rate_limit, delta_max):
         super(CleanDuplicatesTask, self).__init__()
 
         self.backup_dir = backup_dir
+        self.rate_limit = rate_limit
         self.delta_max = delta_max
 
         self.scanner = None
@@ -35,7 +36,7 @@ class CleanDuplicatesTask(Task):
 
         if not profile:
             print 'Requesting profile...'
-            profile = Profile.fetch()
+            profile = Profile.fetch(self.rate_limit)
 
         if not profile:
             print 'Unable to fetch profile'
@@ -78,7 +79,11 @@ class CleanDuplicatesTask(Task):
     # region Private methods
 
     def _create_backup(self, profile):
-        task = CreateBackupTask(self.backup_dir)
-        return task.process(profile)
+        return CreateBackupTask(
+            self.backup_dir,
+            self.rate_limit
+        ).process(
+            profile
+        )
 
     # endregion

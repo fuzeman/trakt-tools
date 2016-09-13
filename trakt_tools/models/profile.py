@@ -6,10 +6,12 @@ log = logging.getLogger(__name__)
 
 
 class Profile(object):
-    def __init__(self, settings):
+    def __init__(self, settings, rate_limit=None):
         self.settings = settings
+        self.rate_limit = rate_limit
 
         self._cache = {}
+        self._last_request_at = None
 
     @property
     def username(self):
@@ -26,8 +28,11 @@ class Profile(object):
         self._cache = None
 
     def request(self, method, path=None, query=None, data=None):
+        # Ignore caching on non-GET requests
         if method != 'GET':
-            # Ignore caching on non-GET requests
+            self._rate_limit()
+
+            # Fire request
             return Trakt.http.request(
                 method,
                 path=path,
@@ -43,6 +48,8 @@ class Profile(object):
 
         # Check cache for response
         if cache_key not in self._cache:
+            self._rate_limit()
+
             # Fire request, store response in cache
             self._cache[cache_key] = Trakt.http.request(
                 method,
@@ -150,17 +157,30 @@ class Profile(object):
 
         return path
 
+    def _rate_limit(self):
+        # Rate-limit requests
+        if self.rate_limit is not None and self._last_request_at is not None:
+            delay = (60 / self.rate_limit) - (time.time() - self._last_request_at)
+
+            if delay > 0:
+                time.sleep(delay)
+
+        self._last_request_at = time.time()
+
     # endregion
 
     # region Class methods
 
     @classmethod
-    def fetch(cls):
+    def fetch(cls, rate_limit):
         settings = Trakt['users/settings'].get()
 
         if not settings:
             return None
 
-        return cls(settings)
+        return cls(
+            settings,
+            rate_limit=rate_limit
+        )
 
     # endregion

@@ -20,17 +20,13 @@ class Scanner(object):
     def run(self, profile):
         # Process items
         for i, count, page in profile.get_pages('/sync/history'):
-            print '[%02d/%02d] Processing items...' % (i, count)
+            print '[%02d/%02d] Processing %d items...' % (i, count, len(page))
 
             for item in page:
                 # Process item, stop scanning if an error is encountered
                 if not self.process(item):
                     log.error('Unable to process item: %r', item)
                     return False
-
-            # Rate limit requests
-            print '[%02d/%02d] Waiting 5 seconds...' % (i, count)
-            time.sleep(5)
 
         # Find duplicated items
         self.shows = self._get_duplicated_items(self._current_shows)

@@ -22,8 +22,9 @@ Trakt.configuration.defaults.client(
 @click.group()
 @click.option('--backup-dir', default=None, help='Directory to store backups.')
 @click.option('--debug', is_flag=True, help='Enable debug logging')
+@click.option('--rate-limit', default=20, help='Maximum number of requests per minute')
 @click.pass_context
-def cli(ctx, backup_dir, debug):
+def cli(ctx, backup_dir, debug, rate_limit):
     if not backup_dir:
         backup_dir = os.path.join(os.curdir, 'backups')
 
@@ -32,8 +33,9 @@ def cli(ctx, backup_dir, debug):
         level=logging.DEBUG if debug else logging.INFO
     )
 
-    # Update context with absolute path for `backup_dir`
+    # Update context
     ctx.backup_dir = os.path.abspath(backup_dir)
+    ctx.rate_limit = rate_limit
 
     # Ensure directory exists
     if not os.path.exists(ctx.backup_dir):

@@ -20,7 +20,11 @@ def clean_duplicates(ctx, token, delta_max, no_backup):
             exit(1)
 
     # Run task
-    success = CleanDuplicatesTask(ctx.parent.backup_dir, delta_max).run(
+    success = CleanDuplicatesTask(
+        ctx.parent.backup_dir,
+        ctx.parent.rate_limit,
+        delta_max
+    ).run(
         token=token,
         backup=not no_backup
     )

@@ -20,10 +20,11 @@ class CreateBackupTask(Task):
         WatchlistHandler
     ]
 
-    def __init__(self, backup_dir):
+    def __init__(self, backup_dir, rate_limit):
         super(CreateBackupTask, self).__init__()
 
         self.backup_dir = backup_dir
+        self.rate_limit = rate_limit
 
     def run(self, token):
         log.debug('run() - token: %r', token)
@@ -36,7 +37,7 @@ class CreateBackupTask(Task):
         log.debug('process()')
 
         if not profile:
-            profile = Profile.fetch()
+            profile = Profile.fetch(self.rate_limit)
 
         if not profile:
             raise Exception('Unable to fetch profile')
