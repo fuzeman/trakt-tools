@@ -1,2 +1,5 @@
+/.idea
+/backups
+
 *.iml
 *.pyc
