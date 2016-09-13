@@ -1,4 +1,4 @@
-from trakt_tools.models.backup import Backup
+from trakt_tools.models import Backup, Profile
 from trakt_tools.tasks.core.base import Task
 from trakt_tools.tasks.backup.create.handlers import *
 
@@ -11,7 +11,7 @@ import shutil
 log = logging.getLogger(__name__)
 
 
-class Download(Task):
+class CreateBackupTask(Task):
     handlers = [
         CollectionHandler,
         HistoryHandler,
@@ -21,38 +21,43 @@ class Download(Task):
     ]
 
     def __init__(self, backup_dir):
-        super(Download, self).__init__()
+        super(CreateBackupTask, self).__init__()
 
         self.backup_dir = backup_dir
 
     def run(self, token):
-        log.debug('Download.run() - token: %r', token)
+        log.debug('run() - token: %r', token)
 
         # Process backup download
         with Trakt.configuration.oauth(token=token):
-            self.process()
+            return self.process()
 
-    def process(self, username=None):
-        if not username:
-            username = self.get_username()
+    def process(self, profile=None):
+        log.debug('process()')
 
-        log.debug('Username: %r', username)
+        if not profile:
+            profile = Profile.fetch()
+
+        if not profile:
+            raise Exception('Unable to fetch profile')
+
+        log.debug(' - profile: %r', profile)
 
         # Create backup
-        backup = Backup.create(self.backup_dir, username)
+        backup = Backup.create(self.backup_dir, profile.username)
 
         # Run handlers
         for handler in self.handlers:
             h = handler()
 
-            if not h.run(backup):
+            if not h.run(backup, profile):
                 log.error('Handler %r failed', h)
                 return False
 
         # Compress backup
         dest_path = os.path.join(
             self.backup_dir,
-            username,
+            profile.username,
             '%s.zip' % backup.name
         )
 

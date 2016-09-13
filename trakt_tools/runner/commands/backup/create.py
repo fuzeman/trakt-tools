@@ -1,5 +1,5 @@
 from trakt_tools.core.authentication import authenticate
-from trakt_tools.tasks.backup.create.main import Download
+from trakt_tools.tasks.backup.create.main import CreateBackupTask
 import click
 
 
@@ -17,5 +17,5 @@ def backup_create(ctx, token):
             exit(1)
 
     # Download data from profile
-    task = Download(ctx.parent.backup_dir)
+    task = CreateBackupTask(ctx.parent.backup_dir)
     task.run(token)

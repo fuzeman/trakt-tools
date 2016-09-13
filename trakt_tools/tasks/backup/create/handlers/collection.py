@@ -1,4 +1,3 @@
-from trakt import Trakt
 import logging
 import os
 
@@ -6,15 +5,15 @@ log = logging.getLogger(__name__)
 
 
 class CollectionHandler(object):
-    def run(self, backup):
+    def run(self, backup, profile):
         return (
-            self.run_media(backup, 'movies') and
-            self.run_media(backup, 'shows')
+            self.run_media(backup, profile, 'movies') and
+            self.run_media(backup, profile, 'shows')
         )
 
-    def run_media(self, backup, media):
+    def run_media(self, backup, profile, media):
         # Request ratings
-        response = Trakt.http.get('/sync/collection/%s?extended=metadata' % media)
+        response = profile.get('/sync/collection/%s?extended=metadata' % media)
 
         if response.status_code != 200:
             print 'Invalid response returned'

@@ -1,13 +1,12 @@
-from trakt import Trakt
 import logging
 
 log = logging.getLogger(__name__)
 
 
 class PlaybackHandler(object):
-    def run(self, backup):
+    def run(self, backup, profile):
         # Request ratings
-        response = Trakt.http.get('/sync/playback')
+        response = profile.get('/sync/playback')
 
         if response.status_code != 200:
             print 'Invalid response returned'
