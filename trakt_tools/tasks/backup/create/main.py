@@ -1,3 +1,4 @@
+from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Backup, Profile
 from trakt_tools.tasks.core.base import Task
 from trakt_tools.tasks.backup.create.handlers import *
@@ -42,9 +43,15 @@ class CreateBackupTask(Task):
         if not profile:
             raise Exception('Unable to fetch profile')
 
-        log.debug(' - profile: %r', profile)
+        print 'Logged in as %r' % profile.username
+
+        if not boolean_input('Would you like to continue?', default=True):
+            exit(0)
 
         # Create backup
+        return self.create_backup(profile)
+
+    def create_backup(self, profile):
         backup = Backup.create(self.backup_dir, profile.username)
 
         # Run handlers

@@ -89,7 +89,7 @@ class CleanDuplicatesTask(Task):
         return CreateBackupTask(
             self.backup_dir,
             self.rate_limit
-        ).process(
+        ).create_backup(
             profile
         )
 
