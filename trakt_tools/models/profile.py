@@ -1,5 +1,6 @@
 from trakt import Trakt
 import logging
+import pytz
 import time
 
 log = logging.getLogger(__name__)
@@ -19,6 +20,26 @@ class Profile(object):
             return None
 
         return self.settings.get('user', {}).get('username')
+
+    @property
+    def timezone(self):
+        name = self.timezone_name
+
+        if not name:
+            return None
+
+        try:
+            return pytz.timezone(name)
+        except Exception:
+            log.warn('Unknown account timezone %r, timestamps will be displayed in the GMT/UTC timezone instead', name)
+            return None
+
+    @property
+    def timezone_name(self):
+        if not self.settings:
+            return None
+
+        return self.settings.get('account', {}).get('timezone')
 
     # region Public methods
 
