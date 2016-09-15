@@ -5,6 +5,8 @@ log = logging.getLogger(__name__)
 
 class PlaybackHandler(object):
     def run(self, backup, profile):
+        print 'Playback Progress'
+
         # Request ratings
         response = profile.get('/sync/playback')
 
@@ -15,9 +17,11 @@ class PlaybackHandler(object):
         # Retrieve items
         items = response.json()
 
-        print '[playback] Received %d item(s)' % len(items)
+        print ' - Received %d item(s)' % len(items)
 
         # Write playback progress to disk
+        print ' - Writing to "playback.json"...'
+
         try:
             return backup.write('playback.json', items)
         except Exception, ex:

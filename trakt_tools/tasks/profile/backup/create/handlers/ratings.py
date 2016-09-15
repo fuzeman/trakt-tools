@@ -5,6 +5,8 @@ log = logging.getLogger(__name__)
 
 class RatingsHandler(object):
     def run(self, backup, profile):
+        print 'Ratings'
+
         # Request ratings
         response = profile.get('/sync/ratings')
 
@@ -15,9 +17,11 @@ class RatingsHandler(object):
         # Retrieve items
         items = response.json()
 
-        print '[ratings] Received %d item(s)' % len(items)
+        print ' - Received %d item(s)' % len(items)
 
         # Write ratings to disk
+        print ' - Writing to "ratings.json"...'
+
         try:
             return backup.write('ratings.json', items)
         except Exception, ex:

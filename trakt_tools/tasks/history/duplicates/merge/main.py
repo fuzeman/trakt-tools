@@ -25,7 +25,7 @@ class MergeHistoryDuplicatesTask(Task):
         self.scanner = None
 
     def run(self, token, backup=None, review=None):
-        log.debug('run() - token: %r', token)
+        log.debug('run()')
 
         # Process backup download
         with Trakt.configuration.oauth(token=token):
@@ -49,17 +49,23 @@ class MergeHistoryDuplicatesTask(Task):
             exit(1)
 
         print 'Logged in as %r' % profile.username
+        print
 
         if not boolean_input('Would you like to continue?', default=True):
             exit(0)
 
+        print
+
         # Create backup
         if backup is None:
             backup = boolean_input('Create profile backup?', default=True)
+            print
 
         if backup and not self._create_backup(profile):
             print 'Unable to create backup'
             exit(1)
+
+        print
 
         # Construct new duplicate scanner
         self.scanner = ScanHistoryDuplicatesTask(
@@ -70,10 +76,10 @@ class MergeHistoryDuplicatesTask(Task):
         )
 
         # Scan history for duplicates
-        print 'Scanning for duplicates...'
-
         if not self.scanner.scan(profile):
             exit(1)
+
+        print
 
         if len(self.scanner.shows) or len(self.scanner.movies):
             print 'Found %d show(s) and %d movie(s) with duplicates' % (
@@ -83,6 +89,8 @@ class MergeHistoryDuplicatesTask(Task):
         else:
             print 'Unable to find any duplicates'
             exit(0)
+
+        print
 
         # Execute actions
         if not self.execute(profile, review):
@@ -94,6 +102,7 @@ class MergeHistoryDuplicatesTask(Task):
     def execute(self, profile, review=None):
         if review is None:
             review = boolean_input('Review every action?', default=True)
+            print
 
         executor = Executor(review)
 
@@ -103,6 +112,7 @@ class MergeHistoryDuplicatesTask(Task):
         if not executor.process_movies(profile, self.scanner.movies):
             return False
 
+        print 'Done'
         return True
 
     # region Private methods

@@ -31,7 +31,7 @@ class CreateBackupTask(Task):
         self.per_page = per_page
 
     def run(self, token):
-        log.debug('run() - token: %r', token)
+        log.debug('run()')
 
         # Process backup download
         with Trakt.configuration.oauth(token=token):
@@ -41,6 +41,7 @@ class CreateBackupTask(Task):
         log.debug('process()')
 
         if not profile:
+            print 'Requesting profile...'
             profile = Profile.fetch(
                 self.per_page,
                 self.rate_limit
@@ -50,9 +51,12 @@ class CreateBackupTask(Task):
             raise Exception('Unable to fetch profile')
 
         print 'Logged in as %r' % profile.username
+        print
 
         if not boolean_input('Would you like to continue?', default=True):
             exit(0)
+
+        print
 
         # Create backup
         return self.create_backup(profile)
@@ -68,7 +72,11 @@ class CreateBackupTask(Task):
                 log.error('Handler %r failed', h)
                 return False
 
+            print
+
         # Compress backup
+        print 'Compressing backup...'
+
         dest_path = os.path.join(
             self.backup_dir,
             profile.username,
@@ -85,6 +93,8 @@ class CreateBackupTask(Task):
                     archive.write(path, os.path.relpath(path, backup.path))
 
         # Delete backup directory
+        print 'Cleaning up...'
         shutil.rmtree(backup.path)
 
+        print 'Backup has been saved to: "%s"' % dest_path
         return True

@@ -19,6 +19,8 @@ def history_duplicates_scan(ctx, token, delta_max, per_page):
             print 'Authentication failed'
             exit(1)
 
+        print
+
     # Run task
     success = ScanHistoryDuplicatesTask(
         delta_max=delta_max,

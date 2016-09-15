@@ -23,6 +23,8 @@ def history_duplicates_merge(ctx, token, backup_dir, delta_max, per_page, backup
             print 'Authentication failed'
             exit(1)
 
+        print
+
     # Set default backup directory
     if not backup_dir:
         backup_dir = os.path.join(os.curdir, 'backups')

@@ -33,6 +33,9 @@ class Executor(object):
 
             # Remove history records
             self._remove_records(ids)
+
+            print
+            print '-' * 70
             print
 
         return True
@@ -56,13 +59,14 @@ class Executor(object):
 
             # Remove history records
             self._remove_records(ids)
+
+            print
+            print '-' * 70
             print
 
         return True
 
     def _remove_records(self, record_ids):
-        print 'Removing %d record(s) from history...' % len(record_ids)
-
         while True:
             # Attempt removal of records
             try:
@@ -75,12 +79,13 @@ class Executor(object):
             except (ClientError, ServerError), ex:
                 _, description = ex.error
 
-                print 'Unable to remove history: %s' % description
+                print 'Unable to remove history record(s): %s' % description
 
                 # Prompt for retry
                 if not boolean_input('Would you like to retry?', default=True):
                     return False
 
+                print
                 continue
 
             # Display results

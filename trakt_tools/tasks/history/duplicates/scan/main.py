@@ -29,7 +29,7 @@ class ScanHistoryDuplicatesTask(Task):
         self._current_movies = {}
 
     def run(self, token):
-        log.debug('run() - token: %r', token)
+        log.debug('run()')
 
         # Process backup download
         with Trakt.configuration.oauth(token=token):
@@ -50,20 +50,23 @@ class ScanHistoryDuplicatesTask(Task):
             exit(1)
 
         print 'Logged in as %r' % profile.username
+        print
 
         if not boolean_input('Would you like to continue?', default=True):
             exit(0)
 
+        print
+
         if not self.scan(profile):
             exit(1)
+
+        print
 
         if not self.shows and not self.movies:
             print 'Unable to find any duplicates'
             exit(0)
 
         timezone = profile.timezone
-
-        print
 
         # Display duplicate shows
         for _, show in self.shows.items():
@@ -81,9 +84,11 @@ class ScanHistoryDuplicatesTask(Task):
         return True
 
     def scan(self, profile):
+        print 'Scanning for duplicates...'
+
         # Process items
         for i, count, page in profile.get_pages('/sync/history'):
-            print '[history](%02d/%02d) Processing %d items...' % (i, count, len(page))
+            print ' - Processing %d items... (page %d of %d)' % (len(page), i, count)
 
             for item in page:
                 # Process item, stop scanning if an error is encountered

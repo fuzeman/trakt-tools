@@ -12,5 +12,4 @@ def authenticate():
     if not authorization or not authorization.get('access_token'):
         return False, None
 
-    print 'Token exchanged - authorization: %r' % authorization
     return True, authorization['access_token']
