@@ -15,7 +15,7 @@ class PlaybackHandler(object):
         # Retrieve items
         items = response.json()
 
-        print 'Received %d item(s)' % len(items)
+        print '[playback] Received %d item(s)' % len(items)
 
         # Write playback progress to disk
         try:

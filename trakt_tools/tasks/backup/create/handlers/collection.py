@@ -22,7 +22,7 @@ class CollectionHandler(object):
         # Retrieve items
         items = response.json()
 
-        print 'Received %d item(s)' % len(items)
+        print '[collection/%s] Received %d item(s)' % (media, len(items))
 
         # Ensure collection directory exists
         collection_dir = os.path.join(backup.path, 'collection')

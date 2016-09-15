@@ -15,7 +15,7 @@ class WatchlistHandler(object):
         # Retrieve items
         items = response.json()
 
-        print 'Received %d item(s)' % len(items)
+        print '[watchlist] Received %d item(s)' % len(items)
 
         # Write watchlist to disk
         try:

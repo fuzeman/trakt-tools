@@ -15,7 +15,7 @@ class RatingsHandler(object):
         # Retrieve items
         items = response.json()
 
-        print 'Received %d item(s)' % len(items)
+        print '[ratings] Received %d item(s)' % len(items)
 
         # Write ratings to disk
         try:

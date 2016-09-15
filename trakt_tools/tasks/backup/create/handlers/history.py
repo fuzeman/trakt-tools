@@ -1,6 +1,4 @@
 import logging
-import random
-import time
 
 log = logging.getLogger(__name__)
 
@@ -13,7 +11,7 @@ class HistoryHandler(object):
             # Append `page` items to list
             items.extend(page)
 
-            print '[%02d/%02d] Received %d item(s)' % (
+            print '[history](%02d/%02d) Received %d item(s)' % (
                 i, count,
                 len(page)
             )
