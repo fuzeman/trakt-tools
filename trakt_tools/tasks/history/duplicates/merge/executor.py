@@ -1,4 +1,5 @@
 from trakt_tools.core.input import boolean_input
+from ..core.formatter import Formatter
 
 from trakt import Trakt, ClientError, ServerError
 import logging
@@ -19,41 +20,8 @@ class Executor(object):
             if not show.children:
                 continue
 
-            title = '"%s" (%r)' % (
-                show.title,
-                show.year
-            )
-
-            print '=' * 80
-            print '%s' % title
-            print '=' * 80
-
-            ids = []
-
-            for _, episode in show.children.items():
-                print '\tS%02dE%02d - %d plays -> %d plays' % (
-                    episode.season,
-                    episode.number,
-                    len(episode.records),
-                    len(episode.groups)
-                )
-
-                for timestamp_utc, records in episode.groups.items():
-                    if timezone:
-                        timestamp = timestamp_utc.astimezone(timezone)
-                    else:
-                        timestamp = timestamp_utc
-
-                    print '\t\t%s (%s)' % (
-                        timestamp.strftime('%b %d, %Y %I:%M %p %Z'),
-                        timestamp_utc.isoformat()
-                    )
-
-                    ids.extend([
-                        record.id for record in records[1:]
-                    ])
-
-                print
+            title, ids = Formatter.show(show, timezone=timezone)
+            print
 
             # Review actions
             if self.review and not boolean_input(
@@ -75,34 +43,7 @@ class Executor(object):
         timezone = profile.timezone
 
         for _, movie in movies.items():
-            title = '"%s" (%r)' % (
-                movie.title,
-                movie.year
-            )
-
-            print '%s - %d plays -> %d plays' % (
-                title,
-                len(movie.records),
-                len(movie.groups)
-            )
-
-            ids = []
-
-            for timestamp_utc, records in movie.groups.items():
-                if timezone:
-                    timestamp = timestamp_utc.astimezone(timezone)
-                else:
-                    timestamp = timestamp_utc
-
-                print '\t%s (%s)' % (
-                    timestamp.strftime('%b %d, %Y %I:%M %p %Z'),
-                    timestamp_utc.isoformat()
-                )
-
-                ids.extend([
-                    record.id for record in records[1:]
-                ])
-
+            title, ids = Formatter.movie(movie, timezone=timezone)
             print
 
             # Review actions

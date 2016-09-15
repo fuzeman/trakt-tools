@@ -1,5 +1,10 @@
-from trakt_tools.tasks.clean.duplicates.scanner.models import Entry, Record
+from trakt_tools.core.input import boolean_input
+from trakt_tools.models import Profile
+from trakt_tools.tasks.base import Task
+from ..core.formatter import Formatter
+from .models import Entry, Record
 
+from trakt import Trakt
 from trakt.mapper import SyncMapper
 from trakt.objects import Episode
 import logging
@@ -7,9 +12,15 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class Scanner(object):
-    def __init__(self, delta_max):
+class ScanHistoryDuplicatesTask(Task):
+    def __init__(self, delta_max, per_page=1000, debug=False, rate_limit=20):
+        super(ScanHistoryDuplicatesTask, self).__init__(
+            debug=debug,
+            rate_limit=rate_limit
+        )
+
         self.delta_max = delta_max
+        self.per_page = per_page
 
         self.shows = {}
         self.movies = {}
@@ -17,15 +28,67 @@ class Scanner(object):
         self._current_shows = {}
         self._current_movies = {}
 
-    def run(self, profile):
+    def run(self, token):
+        log.debug('run() - token: %r', token)
+
+        # Process backup download
+        with Trakt.configuration.oauth(token=token):
+            return self.process()
+
+    def process(self, profile=None):
+        log.debug('process()')
+
+        if not profile:
+            print 'Requesting profile...'
+            profile = Profile.fetch(
+                self.per_page,
+                self.rate_limit
+            )
+
+        if not profile:
+            print 'Unable to fetch profile'
+            exit(1)
+
+        print 'Logged in as %r' % profile.username
+
+        if not boolean_input('Would you like to continue?', default=True):
+            exit(0)
+
+        if not self.scan(profile):
+            exit(1)
+
+        if not self.shows and not self.movies:
+            print 'Unable to find any duplicates'
+            exit(0)
+
+        timezone = profile.timezone
+
+        print
+
+        # Display duplicate shows
+        for _, show in self.shows.items():
+            if not show.children:
+                continue
+
+            Formatter.show(show, timezone=timezone)
+            print
+
+        # Display duplicate movies
+        for _, movie in self.movies.items():
+            Formatter.movie(movie, timezone=timezone)
+            print
+
+        return True
+
+    def scan(self, profile):
         # Process items
         for i, count, page in profile.get_pages('/sync/history'):
             print '[history](%02d/%02d) Processing %d items...' % (i, count, len(page))
 
             for item in page:
                 # Process item, stop scanning if an error is encountered
-                if not self.process(item):
-                    log.error('Unable to process item: %r', item)
+                if not self.process_item(item):
+                    print 'Unable to process item: %r' % item
                     return False
 
         # Find duplicated items
@@ -37,17 +100,18 @@ class Scanner(object):
         self._current_movies = None
         return True
 
-    def process(self, data):
+    def process_item(self, data):
         if 'episode' in data:
-            return self.process_item(self._current_shows, SyncMapper.episode(None, None, data))
+            return self.map_item(self._current_shows, SyncMapper.episode(None, None, data))
 
         if 'movie' in data:
-            return self.process_item(self._current_movies, SyncMapper.movie(None, None, data))
+            return self.map_item(self._current_movies, SyncMapper.movie(None, None, data))
 
         log.warn('Unknown item: %r', data)
         return False
 
-    def process_item(self, store, current, create_shows=True):
+    def map_item(self, store, current, create_shows=True):
+        # Create show structure
         if create_shows and isinstance(current, Episode):
             show_key = current.show.get_key('trakt')
 
@@ -58,8 +122,9 @@ class Scanner(object):
             if show_key not in store:
                 store[show_key] = Entry.from_item(current.show)
 
-            return self.process_item(store[show_key].children, current, create_shows=False)
+            return self.map_item(store[show_key].children, current, create_shows=False)
 
+        # Retrieve item key
         key = current.get_key('trakt')
 
         if not key:

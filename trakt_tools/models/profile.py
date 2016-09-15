@@ -7,8 +7,10 @@ log = logging.getLogger(__name__)
 
 
 class Profile(object):
-    def __init__(self, settings, rate_limit=None):
+    def __init__(self, settings, per_page=None, rate_limit=None):
         self.settings = settings
+
+        self.per_page = per_page
         self.rate_limit = rate_limit
 
         self._cache = {}
@@ -114,7 +116,7 @@ class Profile(object):
 
     # endregion
 
-    def get_pages(self, path=None, query=None, per_page=1000):
+    def get_pages(self, path=None, query=None):
         page = 1
         page_count = None
         item_count = None
@@ -124,7 +126,7 @@ class Profile(object):
         while (page == 1 and page_count is None) or (page_count is not None and page <= page_count):
             page_query = {
                 'page': page,
-                'limit': per_page
+                'limit': self.per_page
             }
 
             if query:
@@ -193,7 +195,7 @@ class Profile(object):
     # region Class methods
 
     @classmethod
-    def fetch(cls, rate_limit):
+    def fetch(cls, per_page, rate_limit):
         settings = Trakt['users/settings'].get()
 
         if not settings:
@@ -201,6 +203,7 @@ class Profile(object):
 
         return cls(
             settings,
+            per_page=per_page,
             rate_limit=rate_limit
         )
 

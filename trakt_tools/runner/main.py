@@ -1,4 +1,5 @@
-from trakt_tools.runner import commands
+from . import commands
+
 from trakt import Trakt
 import click
 import logging
@@ -20,37 +21,33 @@ Trakt.configuration.defaults.client(
 
 # Initialize command-line parser
 @click.group()
-@click.option('--backup-dir', default=None, help='Directory that backups should be stored in (default: "./backups")')
 @click.option('--debug/--no-debug', help='Enable debug logging')
 @click.option('--rate-limit', default=20, help='Maximum number of requests per minute (default: 20)')
 @click.pass_context
-def cli(ctx, backup_dir, debug, rate_limit):
-    if not backup_dir:
-        backup_dir = os.path.join(os.curdir, 'backups')
-
+def cli(ctx, debug, rate_limit):
     # Setup logging level
     logging.basicConfig(
         level=logging.DEBUG if debug else logging.WARN
     )
 
     # Update context
-    ctx.backup_dir = os.path.abspath(backup_dir)
+    ctx.debug = debug
     ctx.rate_limit = rate_limit
 
-    # Ensure directory exists
-    if not os.path.exists(ctx.backup_dir):
-        os.makedirs(ctx.backup_dir)
-
 # Add commands
-cli.add_command(commands.backup_apply)
-cli.add_command(commands.backup_create)
-cli.add_command(commands.clean_duplicates)
+cli.add_command(commands.profile_backup_apply)
+cli.add_command(commands.profile_backup_create)
+cli.add_command(commands.history_duplicates_merge)
+cli.add_command(commands.history_duplicates_scan)
 
 
 def get_prog():
     try:
         if os.path.basename(sys.argv[0]) in ('__main__.py', '-c'):
             return '%s -m trakt_tools' % sys.executable
+
+        if os.path.basename(sys.argv[0]) == 'run.py':
+            return 'run.py'
     except (AttributeError, TypeError, IndexError):
         pass
 

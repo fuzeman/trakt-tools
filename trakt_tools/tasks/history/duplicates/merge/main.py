@@ -1,25 +1,26 @@
 from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Profile
-from trakt_tools.tasks.backup.create.main import CreateBackupTask
-from trakt_tools.tasks.clean.duplicates.executor import Executor
-from trakt_tools.tasks.clean.duplicates.scanner.main import Scanner
-from trakt_tools.tasks.core.base import Task
+from trakt_tools.tasks.profile.backup import CreateBackupTask
+from trakt_tools.tasks.base import Task
+from .executor import Executor
+from ..scan import ScanHistoryDuplicatesTask
 
-from datetime import datetime
 from trakt import Trakt
 import logging
-import time
 
 log = logging.getLogger(__name__)
 
 
-class CleanDuplicatesTask(Task):
-    def __init__(self, backup_dir, rate_limit, delta_max):
-        super(CleanDuplicatesTask, self).__init__()
+class MergeHistoryDuplicatesTask(Task):
+    def __init__(self, backup_dir, delta_max, per_page=1000, debug=False, rate_limit=20):
+        super(MergeHistoryDuplicatesTask, self).__init__(
+            debug=debug,
+            rate_limit=rate_limit
+        )
 
         self.backup_dir = backup_dir
-        self.rate_limit = rate_limit
         self.delta_max = delta_max
+        self.per_page = per_page
 
         self.scanner = None
 
@@ -38,7 +39,10 @@ class CleanDuplicatesTask(Task):
 
         if not profile:
             print 'Requesting profile...'
-            profile = Profile.fetch(self.rate_limit)
+            profile = Profile.fetch(
+                self.per_page,
+                self.rate_limit
+            )
 
         if not profile:
             print 'Unable to fetch profile'
@@ -58,13 +62,18 @@ class CleanDuplicatesTask(Task):
             exit(1)
 
         # Construct new duplicate scanner
-        self.scanner = Scanner(self.delta_max)
+        self.scanner = ScanHistoryDuplicatesTask(
+            delta_max=self.delta_max,
+
+            debug=self.debug,
+            rate_limit=self.rate_limit
+        )
 
         # Scan history for duplicates
         print 'Scanning for duplicates...'
 
-        if not self.scanner.run(profile):
-            return False
+        if not self.scanner.scan(profile):
+            exit(1)
 
         if len(self.scanner.shows) or len(self.scanner.movies):
             print 'Found %d show(s) and %d movie(s) with duplicates' % (
@@ -100,8 +109,10 @@ class CleanDuplicatesTask(Task):
 
     def _create_backup(self, profile):
         return CreateBackupTask(
-            self.backup_dir,
-            self.rate_limit
+            backup_dir=self.backup_dir,
+
+            debug=self.debug,
+            rate_limit=self.rate_limit
         ).create_backup(
             profile
         )

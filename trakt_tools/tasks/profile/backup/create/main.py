@@ -1,7 +1,7 @@
 from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Backup, Profile
-from trakt_tools.tasks.core.base import Task
-from trakt_tools.tasks.backup.create.handlers import *
+from trakt_tools.tasks.base import Task
+from .handlers import *
 
 from trakt import Trakt
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -21,11 +21,14 @@ class CreateBackupTask(Task):
         WatchlistHandler
     ]
 
-    def __init__(self, backup_dir, rate_limit):
-        super(CreateBackupTask, self).__init__()
+    def __init__(self, backup_dir, per_page=1000, debug=False, rate_limit=20):
+        super(CreateBackupTask, self).__init__(
+            debug=debug,
+            rate_limit=rate_limit
+        )
 
         self.backup_dir = backup_dir
-        self.rate_limit = rate_limit
+        self.per_page = per_page
 
     def run(self, token):
         log.debug('run() - token: %r', token)
@@ -38,7 +41,10 @@ class CreateBackupTask(Task):
         log.debug('process()')
 
         if not profile:
-            profile = Profile.fetch(self.rate_limit)
+            profile = Profile.fetch(
+                self.per_page,
+                self.rate_limit
+            )
 
         if not profile:
             raise Exception('Unable to fetch profile')

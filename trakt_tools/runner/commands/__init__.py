@@ -1,2 +1,2 @@
-from trakt_tools.runner.commands.backup import backup_apply, backup_create
-from trakt_tools.runner.commands.clean import clean_duplicates
+from .history import history_duplicates_merge, history_duplicates_scan
+from .profile import profile_backup_apply, profile_backup_create
