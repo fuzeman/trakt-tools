@@ -139,7 +139,7 @@ class Profile(object):
             )
 
             if response.status_code != 200:
-                log.warn('Invalid response returned, will retry in 5 seconds...')
+                print 'Invalid response returned, will retry in 5 seconds...'
                 time.sleep(5)
                 continue
 
