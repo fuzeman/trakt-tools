@@ -1,6 +1,7 @@
 from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Profile
 from trakt_tools.tasks.backup.create.main import CreateBackupTask
+from trakt_tools.tasks.clean.duplicates.executor import Executor
 from trakt_tools.tasks.clean.duplicates.scanner.main import Scanner
 from trakt_tools.tasks.core.base import Task
 
@@ -43,7 +44,7 @@ class CleanDuplicatesTask(Task):
             print 'Unable to fetch profile'
             exit(1)
 
-        print 'Logged in as %r' % profile
+        print 'Logged in as %r' % profile.username
 
         if not boolean_input('Would you like to continue?', default=True):
             exit(0)
@@ -74,14 +75,26 @@ class CleanDuplicatesTask(Task):
             print 'Unable to find any duplicates'
             exit(0)
 
-        # Remove duplicates
-        return self.execute(review)
+        # Execute actions
+        if not self.execute(profile, review):
+            print 'Unable to execute actions'
+            exit(1)
 
-    def execute(self, review=None):
+        return True
+
+    def execute(self, profile, review=None):
         if review is None:
             review = boolean_input('Review every action?', default=True)
 
-        return False
+        executor = Executor(review)
+
+        if not executor.process_shows(profile, self.scanner.shows):
+            return False
+
+        if not executor.process_movies(profile, self.scanner.movies):
+            return False
+
+        return True
 
     # region Private methods
 
