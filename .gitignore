@@ -1,5 +1,7 @@
 /.idea
 /backups
 
+/*.egg-info
+
 *.iml
 *.pyc
