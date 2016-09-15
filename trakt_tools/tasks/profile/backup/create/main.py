@@ -69,7 +69,7 @@ class CreateBackupTask(Task):
             h = handler()
 
             if not h.run(backup, profile):
-                log.error('Handler %r failed', h)
+                print 'Unable to backup profile, handler %r failed' % h
                 return False
 
             print
