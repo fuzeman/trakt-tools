@@ -5,9 +5,9 @@ import click
 
 @click.command('clean:duplicates', )
 @click.option('--token', default=None, help='Trakt.tv authentication token.')
-@click.option('--delta-max', default=10 * 60, help='Maximum delta to consider as duplicate')
-@click.option('--backup/--no-backup', default=None, help='Backup profile')
-@click.option('--review/--no-review', default=None, help='Review actions before execution')
+@click.option('--delta-max', default=10 * 60, help='Maximum delta between history records to consider as duplicate (in seconds) (default: 600)')
+@click.option('--backup/--no-backup', default=None, help='Backup profile before applying any changes')
+@click.option('--review/--no-review', default=None, help='Review each action before applying them')
 @click.pass_context
 def clean_duplicates(ctx, token, delta_max, backup, review):
     "Remove duplicate scrobbles from a Trakt.tv profile."

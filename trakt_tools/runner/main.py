@@ -20,9 +20,9 @@ Trakt.configuration.defaults.client(
 
 # Initialize command-line parser
 @click.group()
-@click.option('--backup-dir', default=None, help='Directory to store backups.')
-@click.option('--debug', is_flag=True, help='Enable debug logging')
-@click.option('--rate-limit', default=20, help='Maximum number of requests per minute')
+@click.option('--backup-dir', default=None, help='Directory that backups should be stored in (default: "./backups")')
+@click.option('--debug/--no-debug', help='Enable debug logging')
+@click.option('--rate-limit', default=20, help='Maximum number of requests per minute (default: 20)')
 @click.pass_context
 def cli(ctx, backup_dir, debug, rate_limit):
     if not backup_dir:
@@ -30,7 +30,7 @@ def cli(ctx, backup_dir, debug, rate_limit):
 
     # Setup logging level
     logging.basicConfig(
-        level=logging.DEBUG if debug else logging.INFO
+        level=logging.DEBUG if debug else logging.WARN
     )
 
     # Update context
