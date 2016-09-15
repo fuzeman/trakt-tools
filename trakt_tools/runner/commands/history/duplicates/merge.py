@@ -6,12 +6,12 @@ import os
 
 
 @click.command('history:duplicates:merge')
-@click.option('--token', default=None, help='Trakt.tv authentication token.')
-@click.option('--backup-dir', default=None, help='Directory that backups should be stored in (default: "./backups")')
-@click.option('--delta-max', default=10 * 60, help='Maximum delta between history records to consider as duplicate (in seconds) (default: 600)')
-@click.option('--per-page', default=1000, help='Request page size (default: 1000)')
-@click.option('--backup/--no-backup', default=None, help='Backup profile before applying any changes')
-@click.option('--review/--no-review', default=None, help='Review each action before applying them')
+@click.option('--token', default=None, help='Trakt.tv authentication token. (default: prompt)')
+@click.option('--backup-dir', default=None, help='Directory that backups should be stored in. (default: "./backups")')
+@click.option('--delta-max', default=10 * 60, help='Maximum delta between history records to consider as duplicate. (in seconds) (default: 600)')
+@click.option('--per-page', default=1000, help='Request page size. (default: 1000)')
+@click.option('--backup/--no-backup', default=None, help='Backup profile before applying any changes. (default: prompt)')
+@click.option('--review/--no-review', default=None, help='Review each action before applying them. (default: prompt)')
 @click.pass_context
 def history_duplicates_merge(ctx, token, backup_dir, delta_max, per_page, backup, review):
     """Merge duplicate history records"""

@@ -21,8 +21,8 @@ Trakt.configuration.defaults.client(
 
 # Initialize command-line parser
 @click.group()
-@click.option('--debug/--no-debug', help='Enable debug logging')
-@click.option('--rate-limit', default=20, help='Maximum number of requests per minute (default: 20)')
+@click.option('--debug/--no-debug', help='Display debug messages.')
+@click.option('--rate-limit', default=20, help='Maximum number of requests per minute. (default: 20)')
 @click.pass_context
 def cli(ctx, debug, rate_limit):
     # Setup logging level
