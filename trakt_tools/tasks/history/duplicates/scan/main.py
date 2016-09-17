@@ -99,6 +99,11 @@ class ScanHistoryDuplicatesTask(Task):
                     print('Unable to process item: %r' % item)
                     return False
 
+        # Close scanner (find duplicates, release resources)
+        self.close()
+        return True
+
+    def close(self):
         # Find duplicated items
         self.shows = self._get_duplicated_items(self._current_shows)
         self.movies = self._get_duplicated_items(self._current_movies)
@@ -106,7 +111,6 @@ class ScanHistoryDuplicatesTask(Task):
         # Destroy item stores
         self._current_shows = None
         self._current_movies = None
-        return True
 
     def process_item(self, data):
         if 'episode' in data:

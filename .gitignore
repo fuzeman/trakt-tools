@@ -1,8 +1,12 @@
+/.coverage
+/.eggs
 /.idea
+/.tox
 /backups
 /build
 
 /*.egg-info
+/test-results.xml
 
 *.iml
 *.pyc
