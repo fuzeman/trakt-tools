@@ -15,15 +15,24 @@ script:
 - tox
 after_success: python setup.py sdist bdist_wheel
 deploy:
-  provider: releases
-  api_key:
-    secure: KUqimpha8GzRmRHQauwVqz4xwvk6m7ouTPLFOID8VNOIyzsceWeLw9SkCspPIChCWvUXTLmtL3ecHWsEd8EuIO5EQ1falTT3DC1BQHqYxheGDwWjGq9zLqLJwl6clcgXoAX8VYlM7fRP7ZqsNfIyBKgxtzjd1hMsZUOrJQVOrQCihbBe1mVq9f6byE5eojyYqiCR6sNleP7PsQgy2H0aUqdRK6CJFvMv8nqIHFFxvymUcDaekPjH2AFiAQgpqdEfHFmqRHKnr5eiEGZOeUSGjeFBJuBfRg9TzNwRDsy6tQVy4ae+JHO4gyvlJmSi3qIixxLNfDKS1NRO/kUk4FtGsCY4i0Vjpect/93Bd3u7zmQkW+4WBShLSSpM0keMpFyLnFExA4IWRUM0J5+j7D+3z5dM/iOs4Q10xFxNb9U+M8UZ5iAzuapEx2o/ZhPRiLmNnyY1T64jnkPgwvCw2yXsQN9xeVXjEnpLs3TOADCpRyCkwspQoxauta5vJb0L0jN6gAxfKg2KCmJ1kUW4JYVhcO2eiWIkvrUfbyJ14tObVywTH5edDG/YE4bV+1Obec2GGN9kuVnnCwsvJlfDHamm/4dv5rBJ779QYOGYGlr7is57fRqLpf4Y7KyagyWfMZR9wulShKXZePdB/ko2niQC5wZy0U2L5qF6exk1mqjbHeU=
-  skip_cleanup: true
-  file_glob: true
-  file:
-  - "dist/trakt-tools-*"
-  - "dist/trakt_tools-*"
-  on:
-    repo: fuzeman/trakt-tools
-    condition: $TRAVIS_PYTHON_VERSION = "2.7"
-    tags: true
+  - provider: pypi
+    user: fm-build
+    password:
+      secure: n15KjzNW7Y2av83c2AID3ERhegGWtemN+FdqqnsD+Pmycfb8YtTeRmkGDohqgk8j9VbE7bdBfo4ZaD3mgTvzOLQUqRWApkLW6LahP9Y0Iix1TGM2iQo4klU4SJMD3XnbqjY1746NpzsfCIhESeoSJrp4VSXegE/0CITIsT2hCG0cOnoQfcIeT2MgUt9PDjSxpgnN9SN94MtBE5saz+nvEtmnED3T7Mm5ISnz8iKwLVXU29aEH/3eb87Cem0tgyqGxsvHczYvYYCAD9xNqh1uKLSa+YZecd+3PqCCf/Y9DK1MRu7X7HFO55L3aE531f30geG4vulEGKLC4ansE3g/pY0stlluuXXBwu4qtuqq7tLYA4bZYNyXH8FNE5Tx2XE0PxKN2SWENQDdJTED7eadwZrWrLAGC1L5ysJKxKmk679YdwttrcREt8gMbV4PKXGf6L39eOt1dM8oapJxAIDk65i52xrbQc2xYyRtrD3eI2pPK4Fj5F6D+RaqVI6vHdcCwIZqvd/P7fpG2U3qpw23M814wsZQQWWD5/YBo8NpqP/UHP/wdLCP0miZGAPPdi7iEvtK3v8y9WftxwPAL2mCZT66u3FXZAjbds8T9orXxSmCbesCRJoJQGEezX5y48pTrw/2HrxZ4LUL/lFikeV92AYrXvPtNwrlnE9L9c/8zHY=
+    on:
+      distributions: sdist bdist_wheel
+      repo: fuzeman/trakt-tools
+      condition: $TRAVIS_PYTHON_VERSION = "2.7"
+      tags: true
+  - provider: releases
+    api_key:
+      secure: KUqimpha8GzRmRHQauwVqz4xwvk6m7ouTPLFOID8VNOIyzsceWeLw9SkCspPIChCWvUXTLmtL3ecHWsEd8EuIO5EQ1falTT3DC1BQHqYxheGDwWjGq9zLqLJwl6clcgXoAX8VYlM7fRP7ZqsNfIyBKgxtzjd1hMsZUOrJQVOrQCihbBe1mVq9f6byE5eojyYqiCR6sNleP7PsQgy2H0aUqdRK6CJFvMv8nqIHFFxvymUcDaekPjH2AFiAQgpqdEfHFmqRHKnr5eiEGZOeUSGjeFBJuBfRg9TzNwRDsy6tQVy4ae+JHO4gyvlJmSi3qIixxLNfDKS1NRO/kUk4FtGsCY4i0Vjpect/93Bd3u7zmQkW+4WBShLSSpM0keMpFyLnFExA4IWRUM0J5+j7D+3z5dM/iOs4Q10xFxNb9U+M8UZ5iAzuapEx2o/ZhPRiLmNnyY1T64jnkPgwvCw2yXsQN9xeVXjEnpLs3TOADCpRyCkwspQoxauta5vJb0L0jN6gAxfKg2KCmJ1kUW4JYVhcO2eiWIkvrUfbyJ14tObVywTH5edDG/YE4bV+1Obec2GGN9kuVnnCwsvJlfDHamm/4dv5rBJ779QYOGYGlr7is57fRqLpf4Y7KyagyWfMZR9wulShKXZePdB/ko2niQC5wZy0U2L5qF6exk1mqjbHeU=
+    skip_cleanup: true
+    file_glob: true
+    file:
+    - "dist/trakt-tools-*"
+    - "dist/trakt_tools-*"
+    on:
+      repo: fuzeman/trakt-tools
+      condition: $TRAVIS_PYTHON_VERSION = "2.7"
+      tags: true
