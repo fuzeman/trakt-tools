@@ -163,7 +163,10 @@ class Profile(object):
             page += 1
 
         if received_count != item_count:
-            raise Exception("Entire history wasn't retrieved (expected %d item(s), received %d item(s)" % (item_count, received_count))
+            raise Exception("Entire history wasn't retrieved (expected %d item(s), received %d item(s)" % (
+                item_count,
+                received_count
+            ))
 
     def __repr__(self):
         return '<Profile %r>' % self.username

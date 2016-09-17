@@ -3,7 +3,7 @@ from __future__ import print_function
 from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Backup, Profile
 from trakt_tools.tasks.base import Task
-from .handlers import *
+from .handlers import CollectionHandler, HistoryHandler, PlaybackHandler, RatingsHandler, WatchlistHandler
 
 from trakt import Trakt
 from zipfile import ZipFile, ZIP_DEFLATED

@@ -8,9 +8,21 @@ import os
 
 
 @click.command('profile:backup:create')
-@click.option('--token', default=None, help='Trakt.tv authentication token. (default: prompt)')
-@click.option('--backup-dir', default=None, help='Directory that backups should be stored in. (default: "./backups")')
-@click.option('--per-page', default=1000, help='Request page size. (default: 1000)')
+@click.option(
+    '--token',
+    default=None,
+    help='Trakt.tv authentication token. (default: prompt)'
+)
+@click.option(
+    '--backup-dir',
+    default=None,
+    help='Directory that backups should be stored in. (default: "./backups")'
+)
+@click.option(
+    '--per-page',
+    default=1000,
+    help='Request page size. (default: 1000)'
+)
 @click.pass_context
 def profile_backup_create(ctx, token, backup_dir, per_page):
     """Create backup of a Trakt.tv profile"""
