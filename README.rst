@@ -1,6 +1,12 @@
 ===========
 trakt-tools
 ===========
+.. image:: https://img.shields.io/travis/fuzeman/trakt-tools.svg?maxAge=2592000?style=flat-square
+    :target: https://travis-ci.org/fuzeman/trakt-tools
+.. image:: https://img.shields.io/github/release/fuzeman/trakt-tools.svg?maxAge=2592000?style=flat-square
+    :target: https://github.com/fuzeman/trakt-tools/releases/latest
+.. image:: https://img.shields.io/pypi/v/trakt-tools.svg?maxAge=2592000?style=flat-square
+    :target: https://pypi.python.org/pypi/trakt-tools
 
 Command-line tools for Trakt.tv.
 
