@@ -1,4 +1,7 @@
+from trakt_tools.core.helpers import total_seconds
+
 from trakt.objects import Show, Episode, Movie
+import six
 
 
 class Entry(object):
@@ -34,11 +37,11 @@ class Entry(object):
         return len(self.records) > len(self.groups)
 
     def add(self, current, delta_max):
-        for records in self.groups.itervalues():
+        for records in six.itervalues(self.groups):
             matched = False
 
             for record in records:
-                delta = (record.watched_at - current.watched_at).total_seconds()
+                delta = abs(total_seconds(record.watched_at - current.watched_at))
 
                 if delta < delta_max:
                     matched = True

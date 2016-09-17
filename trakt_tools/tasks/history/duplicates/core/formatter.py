@@ -1,3 +1,8 @@
+from __future__ import print_function
+
+import six
+
+
 class Formatter(object):
     @classmethod
     def movie(cls, movie, timezone=None):
@@ -6,11 +11,11 @@ class Formatter(object):
             movie.year
         )
 
-        print '%s - %d plays -> %d plays' % (
+        print('%s - %d plays -> %d plays' % (
             title,
             len(movie.records),
             len(movie.groups)
-        )
+        ))
 
         ids = []
 
@@ -20,10 +25,10 @@ class Formatter(object):
             else:
                 timestamp = timestamp_utc
 
-            print '\t%s (%s)' % (
+            print('\t%s (%s)' % (
                 timestamp.strftime('%b %d, %Y %I:%M %p %Z'),
                 timestamp_utc.isoformat()
-            )
+            ))
 
             ids.extend([
                 record.id for record in records[1:]
@@ -38,7 +43,7 @@ class Formatter(object):
             show.year
         )
 
-        print '%s' % title
+        print('%s' % title)
 
         return title, Formatter.episodes(show, timezone=timezone)
 
@@ -46,13 +51,13 @@ class Formatter(object):
     def episodes(cls, show, timezone=None):
         ids = []
 
-        for x, episode in enumerate(show.children.itervalues()):
-            print '\tS%02dE%02d - %d plays -> %d plays' % (
+        for x, episode in enumerate(six.itervalues(show.children)):
+            print('\tS%02dE%02d - %d plays -> %d plays' % (
                 episode.season,
                 episode.number,
                 len(episode.records),
                 len(episode.groups)
-            )
+            ))
 
             for timestamp_utc, records in episode.groups.items():
                 if timezone:
@@ -60,16 +65,16 @@ class Formatter(object):
                 else:
                     timestamp = timestamp_utc
 
-                print '\t\t%s (%s)' % (
+                print('\t\t%s (%s)' % (
                     timestamp.strftime('%b %d, %Y %I:%M %p %Z'),
                     timestamp_utc.isoformat()
-                )
+                ))
 
                 ids.extend([
                     record.id for record in records[1:]
                 ])
 
             if x < len(show.children) - 1:
-                print
+                print()
 
         return ids

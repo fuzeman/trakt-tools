@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Profile
 from trakt_tools.tasks.profile.backup import CreateBackupTask
@@ -38,34 +40,34 @@ class MergeHistoryDuplicatesTask(Task):
         log.debug('process()')
 
         if not profile:
-            print 'Requesting profile...'
+            print('Requesting profile...')
             profile = Profile.fetch(
                 self.per_page,
                 self.rate_limit
             )
 
         if not profile:
-            print 'Unable to fetch profile'
+            print('Unable to fetch profile')
             exit(1)
 
-        print 'Logged in as %r' % profile.username
-        print
+        print('Logged in as %r' % profile.username)
+        print()
 
         if not boolean_input('Would you like to continue?', default=True):
             exit(0)
 
-        print
+        print()
 
         # Create backup
         if backup is None:
             backup = boolean_input('Create profile backup?', default=True)
-            print
+            print()
 
         if backup and not self._create_backup(profile):
-            print 'Unable to create backup'
+            print('Unable to create backup')
             exit(1)
 
-        print
+        print()
 
         # Construct new duplicate scanner
         self.scanner = ScanHistoryDuplicatesTask(
@@ -79,22 +81,22 @@ class MergeHistoryDuplicatesTask(Task):
         if not self.scanner.scan(profile):
             exit(1)
 
-        print
+        print()
 
         if len(self.scanner.shows) or len(self.scanner.movies):
-            print 'Found %d show(s) and %d movie(s) with duplicates' % (
+            print('Found %d show(s) and %d movie(s) with duplicates' % (
                 len(self.scanner.shows),
                 len(self.scanner.movies)
-            )
+            ))
         else:
-            print 'Unable to find any duplicates'
+            print('Unable to find any duplicates')
             exit(0)
 
-        print
+        print()
 
         # Execute actions
         if not self.execute(profile, review):
-            print 'Unable to execute actions'
+            print('Unable to execute actions')
             exit(1)
 
         return True
@@ -102,7 +104,7 @@ class MergeHistoryDuplicatesTask(Task):
     def execute(self, profile, review=None):
         if review is None:
             review = boolean_input('Review every action?', default=True)
-            print
+            print()
 
         executor = Executor(review)
 
@@ -112,7 +114,7 @@ class MergeHistoryDuplicatesTask(Task):
         if not executor.process_movies(profile, self.scanner.movies):
             return False
 
-        print 'Done'
+        print('Done')
         return True
 
     # region Private methods

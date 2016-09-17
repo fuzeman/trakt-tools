@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Profile
 from trakt_tools.tasks.base import Task
@@ -8,6 +10,7 @@ from trakt import Trakt
 from trakt.mapper import SyncMapper
 from trakt.objects import Episode
 import logging
+import six
 
 log = logging.getLogger(__name__)
 
@@ -39,31 +42,31 @@ class ScanHistoryDuplicatesTask(Task):
         log.debug('process()')
 
         if not profile:
-            print 'Requesting profile...'
+            print('Requesting profile...')
             profile = Profile.fetch(
                 self.per_page,
                 self.rate_limit
             )
 
         if not profile:
-            print 'Unable to fetch profile'
+            print('Unable to fetch profile')
             exit(1)
 
-        print 'Logged in as %r' % profile.username
-        print
+        print('Logged in as %r' % profile.username)
+        print()
 
         if not boolean_input('Would you like to continue?', default=True):
             exit(0)
 
-        print
+        print()
 
         if not self.scan(profile):
             exit(1)
 
-        print
+        print()
 
         if not self.shows and not self.movies:
-            print 'Unable to find any duplicates'
+            print('Unable to find any duplicates')
             exit(0)
 
         timezone = profile.timezone
@@ -74,26 +77,26 @@ class ScanHistoryDuplicatesTask(Task):
                 continue
 
             Formatter.show(show, timezone=timezone)
-            print
+            print()
 
         # Display duplicate movies
         for _, movie in self.movies.items():
             Formatter.movie(movie, timezone=timezone)
-            print
+            print()
 
         return True
 
     def scan(self, profile):
-        print 'Scanning for duplicates...'
+        print('Scanning for duplicates...')
 
         # Process items
         for i, count, page in profile.get_pages('/sync/history'):
-            print ' - Processing %d items... (page %d of %d)' % (len(page), i, count)
+            print(' - Processing %d items... (page %d of %d)' % (len(page), i, count))
 
             for item in page:
                 # Process item, stop scanning if an error is encountered
                 if not self.process_item(item):
-                    print 'Unable to process item: %r' % item
+                    print('Unable to process item: %r' % item)
                     return False
 
         # Find duplicated items
@@ -156,7 +159,7 @@ class ScanHistoryDuplicatesTask(Task):
     def _get_duplicated_items(store):
         result = {}
 
-        for key, entry in store.iteritems():
+        for key, entry in six.iteritems(store):
             if entry.duplicated:
                 result[key] = entry
 

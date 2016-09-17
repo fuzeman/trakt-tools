@@ -1,6 +1,9 @@
+import six
+
+
 def boolean_input(message, default=None):
     while True:
-        result = raw_input('%s [%s]: ' % (message, 'yes' if default else 'no'))
+        result = six.moves.input('%s [%s]: ' % (message, 'yes' if default else 'no'))
 
         # Strip whitespace and convert to lower case
         result = result.strip().lower()

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from trakt_tools.core.input import boolean_input
 from ..core.formatter import Formatter
 
@@ -21,22 +23,22 @@ class Executor(object):
                 continue
 
             title, ids = Formatter.show(show, timezone=timezone)
-            print
+            print()
 
             # Review actions
             if self.review and not boolean_input(
                 'Remove %d duplicate history record(s) for %s?' % (len(ids), title),
                 default=True
             ):
-                print 'Skipped'
+                print('Skipped')
                 continue
 
             # Remove history records
             self._remove_records(ids)
 
-            print
-            print '-' * 70
-            print
+            print()
+            print('-' * 70)
+            print()
 
         return True
 
@@ -47,22 +49,22 @@ class Executor(object):
 
         for _, movie in movies.items():
             title, ids = Formatter.movie(movie, timezone=timezone)
-            print
+            print()
 
             # Review actions
             if self.review and not boolean_input(
                 'Remove %d duplicate history record(s) for %s?' % (len(ids), title),
                 default=True
             ):
-                print 'Skipped'
+                print('Skipped')
                 continue
 
             # Remove history records
             self._remove_records(ids)
 
-            print
-            print '-' * 70
-            print
+            print()
+            print('-' * 70)
+            print()
 
         return True
 
@@ -76,16 +78,16 @@ class Executor(object):
                     },
                     exceptions=True
                 )
-            except (ClientError, ServerError), ex:
+            except (ClientError, ServerError) as ex:
                 _, description = ex.error
 
-                print 'Unable to remove history record(s): %s' % description
+                print('Unable to remove history record(s): %s' % description)
 
                 # Prompt for retry
                 if not boolean_input('Would you like to retry?', default=True):
                     return False
 
-                print
+                print()
                 continue
 
             # Display results
@@ -93,20 +95,20 @@ class Executor(object):
             deleted_movies = response.get('deleted', {}).get('movies', 0)
 
             if deleted_episodes and deleted_movies:
-                print 'Removed %d episode record(s) and %d movie record(s) from history' % (
+                print('Removed %d episode record(s) and %d movie record(s) from history' % (
                     deleted_episodes,
                     deleted_movies
-                )
+                ))
             elif deleted_episodes:
-                print 'Removed %d episode record(s) from history' % (
+                print('Removed %d episode record(s) from history' % (
                     deleted_episodes
-                )
+                ))
             elif deleted_movies:
-                print 'Removed %d movie record(s) from history' % (
+                print('Removed %d movie record(s) from history' % (
                     deleted_movies
-                )
+                ))
 
             for record_id in response.get('not_found', {}).get('ids', []):
-                print 'Unable to find record with id: %r' % record_id
+                print('Unable to find record with id: %r' % record_id)
 
             return True

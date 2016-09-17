@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from trakt_tools.core.input import boolean_input
 from trakt_tools.models import Backup, Profile
 from trakt_tools.tasks.base import Task
@@ -41,7 +43,7 @@ class CreateBackupTask(Task):
         log.debug('process()')
 
         if not profile:
-            print 'Requesting profile...'
+            print('Requesting profile...')
             profile = Profile.fetch(
                 self.per_page,
                 self.rate_limit
@@ -50,13 +52,13 @@ class CreateBackupTask(Task):
         if not profile:
             raise Exception('Unable to fetch profile')
 
-        print 'Logged in as %r' % profile.username
-        print
+        print('Logged in as %r' % profile.username)
+        print()
 
         if not boolean_input('Would you like to continue?', default=True):
             exit(0)
 
-        print
+        print()
 
         # Create backup
         return self.create_backup(profile)
@@ -69,13 +71,13 @@ class CreateBackupTask(Task):
             h = handler()
 
             if not h.run(backup, profile):
-                print 'Unable to backup profile, handler %r failed' % h
+                print('Unable to backup profile, handler %r failed' % h)
                 return False
 
-            print
+            print()
 
         # Compress backup
-        print 'Compressing backup...'
+        print('Compressing backup...')
 
         dest_path = os.path.join(
             self.backup_dir,
@@ -93,8 +95,8 @@ class CreateBackupTask(Task):
                     archive.write(path, os.path.relpath(path, backup.path))
 
         # Delete backup directory
-        print 'Cleaning up...'
+        print('Cleaning up...')
         shutil.rmtree(backup.path)
 
-        print 'Backup has been saved to: "%s"' % dest_path
+        print('Backup has been saved to: "%s"' % dest_path)
         return True

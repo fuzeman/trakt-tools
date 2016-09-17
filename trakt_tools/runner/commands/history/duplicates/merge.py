@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from trakt_tools.core.authentication import authenticate
 from trakt_tools.tasks import MergeHistoryDuplicatesTask
 
@@ -20,10 +22,10 @@ def history_duplicates_merge(ctx, token, backup_dir, delta_max, per_page, backup
         success, token = authenticate()
 
         if not success:
-            print 'Authentication failed'
+            print('Authentication failed')
             exit(1)
 
-        print
+        print()
 
     # Set default backup directory
     if not backup_dir:
