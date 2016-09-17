@@ -1,3 +1,8 @@
+0.1.4 (2016-09-17)
+------------------
+**Fixed**
+ - Issue deploying github releases (possible)
+
 0.1.3 (2016-09-17)
 ------------------
 **Fixed**
