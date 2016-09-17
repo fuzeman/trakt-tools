@@ -1,0 +1,29 @@
+language: python
+python:
+- '2.6'
+- '2.7'
+- '3.2'
+- '3.3'
+- '3.4'
+- '3.5'
+install:
+- pip install -U setuptools
+- pip install tox-travis
+- if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install "virtualenv<14.0.0"; fi
+script:
+- export CURRENT_BRANCH=$(if [ -n "$TRAVIS_TAG" ]; then echo "master"; else echo "$TRAVIS_BRANCH"; fi)
+- tox
+after_success: python setup.py sdist bdist_wheel
+deploy:
+  provider: releases
+  api_key:
+    secure: KUqimpha8GzRmRHQauwVqz4xwvk6m7ouTPLFOID8VNOIyzsceWeLw9SkCspPIChCWvUXTLmtL3ecHWsEd8EuIO5EQ1falTT3DC1BQHqYxheGDwWjGq9zLqLJwl6clcgXoAX8VYlM7fRP7ZqsNfIyBKgxtzjd1hMsZUOrJQVOrQCihbBe1mVq9f6byE5eojyYqiCR6sNleP7PsQgy2H0aUqdRK6CJFvMv8nqIHFFxvymUcDaekPjH2AFiAQgpqdEfHFmqRHKnr5eiEGZOeUSGjeFBJuBfRg9TzNwRDsy6tQVy4ae+JHO4gyvlJmSi3qIixxLNfDKS1NRO/kUk4FtGsCY4i0Vjpect/93Bd3u7zmQkW+4WBShLSSpM0keMpFyLnFExA4IWRUM0J5+j7D+3z5dM/iOs4Q10xFxNb9U+M8UZ5iAzuapEx2o/ZhPRiLmNnyY1T64jnkPgwvCw2yXsQN9xeVXjEnpLs3TOADCpRyCkwspQoxauta5vJb0L0jN6gAxfKg2KCmJ1kUW4JYVhcO2eiWIkvrUfbyJ14tObVywTH5edDG/YE4bV+1Obec2GGN9kuVnnCwsvJlfDHamm/4dv5rBJ779QYOGYGlr7is57fRqLpf4Y7KyagyWfMZR9wulShKXZePdB/ko2niQC5wZy0U2L5qF6exk1mqjbHeU=
+  skip_cleanup: true
+  file_glob: true
+  file:
+  - "dist/trakt-tools-*"
+  - "dist/trakt_tools-*"
+  on:
+    repo: fuzeman/trakt-tools
+    condition: $TRAVIS_PYTHON_VERSION = "2.7"
+    tags: true
