@@ -19,6 +19,7 @@ deploy:
     user: fm-build
     password:
       secure: Vj3L21R5iq1C+oMiM6gPhrGBDphO4rC4YQIo1cAUqcYaFtn56YLb0zL/Q+r5HP/8J6URPX5qYfXB0Yg2uRivVkWm71Naol2bJ3mL34O/V5IfH9XO2GjVM/muygzAKr5E4Lz2wVFlfbY1tOjxwTdlNoTo/sKMRUXMaNuL/MhyUFzrEKsjwY4pkCCiSe9iVHiX/KLwEWh6xl+pPo5rEblHF++Xsd4wFGS+VO+XPaW4dAnaJfNCF0JUpu044Wd6KY3R6s/teK1EIvkQhjnWWiMCmr2ViHRqwwteD/3h3pEcd5ycXeQcwE+tY/Yue8bzTaE6qkJ/jnqAr50pSDxziwKvpK2+cJOE+Ka/VcUtAzJ2lIh7yxzHmSba1llevxSntauC35BeBhh72RJgatyK0iNjJ05Flj4bXotivbswr38h5fUC7ud5Jh0boOWxhzlS1Mw3c2dyK2PuKWWgP7xDvYQdTKjvcQ0cC5kbhY8qfY2ampnvR5JM2RvZJKgyzNSqXYCqu6pVJm3Zeoj/r6A7S+/4Via+BjgaWz1C4KxeBwnnhWvpLTdpk3fUdSgB0+udPnBDK8hOLTz55cCPyLyiLppd9rqlwD9S1ye60GUgD6FOLo5/Tbur1SfEY5fx+M6tLNLLLckgPrfWDlnJD7cBBS0na4UHkdQPp0/23iiqEFGbLEI=
+    skip_cleanup: true
     on:
       distributions: sdist bdist_wheel
       repo: fuzeman/trakt-tools
