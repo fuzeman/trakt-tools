@@ -1,3 +1,8 @@
+0.1.7 (2016-09-19)
+------------------
+**Fixed**
+ - Records could be duplicated if watched history changes while the scanner is running
+
 0.1.6 (2016-09-19)
 ------------------
 **Fixed**
