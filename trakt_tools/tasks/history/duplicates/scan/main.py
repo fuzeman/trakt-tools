@@ -152,6 +152,10 @@ class ScanHistoryDuplicatesTask(Task):
         # Try add record to existing group
         record = Record.from_item(current)
 
+        if store[key].has_record(record):
+            log.debug('Ignoring duplicate record: %r', record)
+            return True
+
         if store[key].add(record, self.delta_max):
             return True
 

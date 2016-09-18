@@ -30,7 +30,7 @@ class Entry(object):
         self.children = {}
 
         self.groups = {}
-        self.records = []
+        self.records = {}
 
     @property
     def duplicated(self):
@@ -52,7 +52,7 @@ class Entry(object):
                 records.append(current)
 
                 # Add record to list
-                self.records.append(current)
+                self.records[current.id] = current
                 return True
 
         return False
@@ -65,7 +65,10 @@ class Entry(object):
         self.groups[record.watched_at] = [record]
 
         # Add record to list
-        self.records.append(record)
+        self.records[record.id] = record
+
+    def has_record(self, record):
+        return record.id in self.records
 
     def __repr__(self):
         fragments = []

@@ -110,9 +110,7 @@ def test_duplicate_single_episode():
     ]
 
     # Validate records
-    assert [
-        r.id for r in episode.records
-    ] == [
+    assert sorted(episode.records.keys()) == [
         1,
         2
     ]
@@ -185,9 +183,7 @@ def test_duplicate_single_movie():
     ]
 
     # Validate records
-    assert [
-        r.id for r in movie.records
-    ] == [
+    assert sorted(movie.records.keys()) == [
         1,
         2
     ]
