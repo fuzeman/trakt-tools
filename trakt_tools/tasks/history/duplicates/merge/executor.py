@@ -5,13 +5,15 @@ from ..core.formatter import Formatter
 
 from trakt import Trakt, ClientError, ServerError
 import logging
+import six
 
 log = logging.getLogger(__name__)
 
 
 class Executor(object):
-    def __init__(self, review=True):
+    def __init__(self, review=True, batch_size=200):
         self.review = review
+        self.batch_size = batch_size
 
     def process_shows(self, profile, shows):
         log.debug('Executing actions on %d shows...', len(shows))
@@ -34,7 +36,8 @@ class Executor(object):
                 continue
 
             # Remove history records
-            self._remove_records(ids)
+            for x in six.moves.xrange(0, len(ids), self.batch_size):
+                self._remove_records(ids[x:x + self.batch_size])
 
             print()
             print('-' * 70)
@@ -60,7 +63,8 @@ class Executor(object):
                 continue
 
             # Remove history records
-            self._remove_records(ids)
+            for x in six.moves.xrange(0, len(ids), self.batch_size):
+                self._remove_records(ids[x:x + self.batch_size])
 
             print()
             print('-' * 70)
