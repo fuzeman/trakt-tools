@@ -190,7 +190,7 @@ def test_duplicate_single_movie():
 
 
 #
-#
+# Unique
 #
 
 
@@ -307,6 +307,64 @@ def test_unique_movie():
 
         'id': 2,
         'watched_at': '2014-03-31T09:28:53.000Z',
+
+        'movie': {
+            'title': 'The Dark Knight',
+            'year': 2008,
+
+            'ids': {
+                'trakt': 4,
+                'slug': 'the-dark-knight-2008',
+                'imdb': 'tt0468569',
+                'tmdb': 155
+            }
+        }
+    }) is True
+
+    # Close scanner
+    scanner.close()
+
+    # Validate entry
+    assert scanner.movies.get('4') is None
+
+
+#
+# Record duplication
+#
+
+
+def test_record_duplication():
+    scanner = ScanHistoryDuplicatesTask(
+        delta_max=600
+    )
+
+    # Process history
+    assert scanner.process_item({
+        'action': 'scrobble',
+        'type': 'movie',
+
+        'id': 1,
+        'watched_at': '2014-03-31T09:28:53.000Z',
+
+        'movie': {
+            'title': 'The Dark Knight',
+            'year': 2008,
+
+            'ids': {
+                'trakt': 4,
+                'slug': 'the-dark-knight-2008',
+                'imdb': 'tt0468569',
+                'tmdb': 155
+            }
+        }
+    }) is True
+
+    assert scanner.process_item({
+        'action': 'scrobble',
+        'type': 'movie',
+
+        'id': 1,
+        'watched_at': '2014-03-31T09:20:53.000Z',
 
         'movie': {
             'title': 'The Dark Knight',
