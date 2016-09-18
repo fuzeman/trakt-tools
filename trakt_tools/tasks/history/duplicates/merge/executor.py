@@ -68,25 +68,32 @@ class Executor(object):
 
         return True
 
-    def _remove_records(self, record_ids):
+    @staticmethod
+    def _remove_records(ids):
         while True:
             # Attempt removal of records
             try:
                 response = Trakt['sync/history'].remove(
                     items={
-                        'ids': record_ids
+                        'ids': ids
                     },
                     exceptions=True
                 )
-            except (ClientError, ServerError) as ex:
-                _, description = ex.error
+            except Exception as ex:
+                # Retrieve error message
+                message = ex.message
 
-                print('Unable to remove history record(s): %s' % description)
+                if isinstance(ex, (ClientError, ServerError)):
+                    _, message = ex.error
 
-                # Prompt for retry
+                # Prompt for request retry
+                print('Unable to remove %d history record(s): %s' % (len(ids), message))
+
                 if not boolean_input('Would you like to retry?', default=True):
+                    # Cancel request
                     return False
 
+                # Retry request
                 print()
                 continue
 
