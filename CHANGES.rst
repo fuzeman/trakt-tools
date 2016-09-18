@@ -1,3 +1,11 @@
+0.1.5 (2016-09-19)
+------------------
+**Changed**
+ - History records are now removed in batches of 200 items (to avoid read timeouts)
+
+**Fixed**
+ - Connection errors weren't being caught correctly during history removal
+
 0.1.4 (2016-09-17)
 ------------------
 **Fixed**
