@@ -1,3 +1,11 @@
+0.1.8 (2016-09-20)
+------------------
+**Added**
+ - History retrieval requests are now automatically retried 3 times if any error is returned (timeouts, server overloaded, etc..), a prompt will be displayed if the request fails more than 3 times
+
+**Fixed**
+ - Failed profile requests were incorrectly being cached
+
 0.1.7 (2016-09-19)
 ------------------
 **Fixed**
