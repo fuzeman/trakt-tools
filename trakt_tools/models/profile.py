@@ -75,12 +75,18 @@ class Profile(object):
         if cache_key not in self._cache:
             self._rate_limit()
 
-            # Fire request, store response in cache
-            self._cache[cache_key] = Trakt.http.request(
+            # Send request
+            response = Trakt.http.request(
                 method,
                 path=path,
                 query=query
             )
+
+            # Store response is cache (if successful)
+            if response.status_code == 200:
+                self._cache[cache_key] = response
+
+            return response
 
         # Return response from cache
         return self._cache[cache_key]
