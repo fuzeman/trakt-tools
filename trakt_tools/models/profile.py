@@ -1,5 +1,8 @@
 from __future__ import print_function
 
+from trakt_tools.core.input import boolean_input
+
+from requests import RequestException
 from trakt import Trakt
 import logging
 import pytz
@@ -130,6 +133,7 @@ class Profile(object):
         item_count = None
 
         received_count = 0
+        retry_count = 0
 
         while (page == 1 and page_count is None) or (page_count is not None and page <= page_count):
             page_query = {
@@ -141,17 +145,36 @@ class Profile(object):
                 page_query.update(query)
 
             # Request page
-            response = self.get(
-                path=path,
-                query=page_query
-            )
-
-            if response.status_code != 200:
-                print('Invalid response returned, will retry in 5 seconds...')
-                time.sleep(5)
+            try:
+                response = self.get(
+                    path=path,
+                    query=page_query
+                )
+            except RequestException as ex:
+                self._retry_request(
+                    retry_count,
+                    prompt=retry_count >= 3,
+                    message='Unable to fetch page #%d' % page,
+                    reason='exception: %s' % ex.message
+                )
+                retry_count += 1
                 continue
 
+            if response.status_code != 200:
+                self._retry_request(
+                    retry_count,
+                    prompt=retry_count >= 3,
+                    message='Unable to fetch page #%d' % page,
+                    reason='status: %s' % response.status_code
+                )
+                retry_count += 1
+                continue
+
+            # Valid response returned
             items = response.json()
+
+            # Reset state
+            retry_count = 0
 
             # Increment received count
             received_count += len(items)
@@ -200,6 +223,39 @@ class Profile(object):
                 time.sleep(delay)
 
         self._last_request_at = time.time()
+
+    @staticmethod
+    def _retry_request(retry_count, prompt=True, message='Request failed', reason=None):
+        # Ask if a retry should be attempted
+        if prompt:
+            print('%s (%s)' % (
+                message,
+                reason
+            ))
+
+            if boolean_input('Request has failed %d times, retry request?' % retry_count, default=True):
+                # Retry request again
+                return
+
+            # User cancelled the request
+            if reason:
+                raise Exception('%s (attempted %d times), %s' % (
+                    message,
+                    retry_count,
+                    reason
+                ))
+
+            raise Exception('%s (attempted %d times)' % (
+                message,
+                retry_count
+            ))
+
+        # Retry request
+        print('%s, retrying in 5 seconds... (%s)' % (
+            message,
+            reason
+        ))
+        time.sleep(5)
 
     # endregion
 
