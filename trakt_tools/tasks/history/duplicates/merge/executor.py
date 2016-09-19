@@ -3,6 +3,7 @@ from __future__ import print_function
 from trakt_tools.core.input import boolean_input
 from ..core.formatter import Formatter
 
+from requests import RequestException
 from trakt import Trakt, ClientError, ServerError
 import logging
 import six
@@ -83,7 +84,7 @@ class Executor(object):
                     },
                     exceptions=True
                 )
-            except Exception as ex:
+            except (ClientError, ServerError, RequestException) as ex:
                 # Retrieve error message
                 message = ex.message
 
@@ -93,7 +94,7 @@ class Executor(object):
                 # Prompt for request retry
                 print('Unable to remove %d history record(s): %s' % (len(ids), message))
 
-                if not boolean_input('Would you like to retry?', default=True):
+                if not boolean_input('Would you like to retry the request?', default=True):
                     # Cancel request
                     return False
 
