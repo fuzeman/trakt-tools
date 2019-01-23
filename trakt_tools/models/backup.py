@@ -21,7 +21,7 @@ class Backup(object):
         if os.path.exists(path):
             return False
 
-        with open(path, 'wb') as fp:
+        with open(path, 'w') as fp:
             json.dump(data, fp, indent=4, sort_keys=True)
 
         return True
