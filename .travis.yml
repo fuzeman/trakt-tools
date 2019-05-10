@@ -1,15 +1,13 @@
 language: python
 python:
-- '2.6'
 - '2.7'
-- '3.2'
-- '3.3'
 - '3.4'
 - '3.5'
+- '3.6'
+- '3.7'
 install:
 - pip install -U setuptools
 - pip install tox-travis
-- if [[ $TRAVIS_PYTHON_VERSION == 3.2 ]]; then pip install "virtualenv<14.0.0"; fi
 script:
 - export CURRENT_BRANCH=$(if [ -n "$TRAVIS_TAG" ]; then echo "master"; else echo "$TRAVIS_BRANCH"; fi)
 - tox
