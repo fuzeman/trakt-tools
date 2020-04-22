@@ -25,7 +25,7 @@ import os
 )
 @click.pass_context
 def profile_backup_create(ctx, token, backup_dir, per_page):
-    """Create backup of a Trakt.tv profile"""
+    """Create backup of a Trakt.tv profile."""
 
     if not token:
         success, token = authenticate()

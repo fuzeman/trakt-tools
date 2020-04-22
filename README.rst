@@ -14,7 +14,7 @@ Command-line tools for Trakt.tv.
 
 **If you are concerned about data-loss:** I would suggest reviewing the created backups yourself, they are simple JSON files that can be opened in any text editor. Backup files are structured exactly how they are returned from the Trakt.tv API.
 
-**Note:** Backups can't be applied to profiles *yet*, this feature will be available soon.
+**Note:** Only history from a backup can be applied to your profile currently. Support for applying collection, playback, ratings, and watchlist data from a backup has not been implemented yet.
 
 -------
 Install
@@ -89,17 +89,26 @@ Commands
       --help               Show this message and exit.
 
 ````````````````````````````````````````````
-:code:`profile:backup:apply` *(coming soon)*
+:code:`profile:backup:apply`
 ````````````````````````````````````````````
 
 .. code-block::
 
-    Usage: trakt_tools profile:backup:apply [OPTIONS]
+    Usage: trakt_tools profile:backup:apply [OPTIONS] BACKUP_ZIP
 
-      Apply backup to a Trakt.tv profile
+      Apply backup to a Trakt.tv profile.
+
+      Only history can be applied to your profile currently. Support for applying collection,
+      playback, ratings, and watchlist data has not been implemented yet.
+
+      Note: History already on your profile will be duplicated, `history:duplicates:merge` can be
+      run afterwards to merge any duplicates in your history.
+
+      BACKUP_ZIP is the location of the zip file created by the profile:history:backup command
 
     Options:
-      --help  Show this message and exit.
+      --token TEXT  Trakt.tv authentication token. (default: prompt)
+      --help        Show this message and exit.
 
 `````````````````````````````
 :code:`profile:backup:create`
