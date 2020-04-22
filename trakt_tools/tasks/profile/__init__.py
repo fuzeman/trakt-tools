@@ -1,6 +1,7 @@
-from .backup import CreateBackupTask
+from .backup import CreateBackupTask, CreateApplyTask
 
 
 __all__ = [
-    'CreateBackupTask'
+    'CreateBackupTask',
+    'CreateApplyTask'
 ]

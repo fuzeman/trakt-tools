@@ -36,7 +36,7 @@ class Backup(object):
             timestamp = datetime.utcnow()
 
         # Build name
-        name = timestamp.isoformat('_').replace(':', '-')
+        name = timestamp.strftime("%Y-%m-%d_%H-%M")
 
         # Build path
         path = os.path.join(
