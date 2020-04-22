@@ -34,6 +34,7 @@ def cli(ctx, debug, rate_limit):
     ctx.debug = debug
     ctx.rate_limit = rate_limit
 
+
 # Add commands
 cli.add_command(commands.profile_backup_apply)
 cli.add_command(commands.profile_backup_create)

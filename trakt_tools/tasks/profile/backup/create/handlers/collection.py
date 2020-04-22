@@ -1,3 +1,4 @@
+# flake8: noqa: W504
 from __future__ import print_function
 
 import logging
