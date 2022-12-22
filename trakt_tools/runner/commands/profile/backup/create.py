@@ -50,6 +50,7 @@ def profile_backup_create(ctx, token, backup_dir, per_page):
         per_page=per_page,
 
         debug=ctx.parent.debug,
+        confirm=ctx.parent.confirm,
         rate_limit=ctx.parent.rate_limit
     ).run(
         token=token
