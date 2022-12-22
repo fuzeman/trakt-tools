@@ -23,8 +23,9 @@ Trakt.configuration.defaults.client(
 @click.group()
 @click.option('--debug/--no-debug', help='Display debug messages.')
 @click.option('--rate-limit', default=20, help='Maximum number of requests per minute. (default: 20)')
+@click.option('--no-confirm', is_flag=True, show_default=True, help='Do not confirm some actions')
 @click.pass_context
-def cli(ctx, debug, rate_limit):
+def cli(ctx, debug, rate_limit, no_confirm):
     # Setup logging level
     logging.basicConfig(
         level=logging.DEBUG if debug else logging.WARN
@@ -33,6 +34,7 @@ def cli(ctx, debug, rate_limit):
     # Update context
     ctx.debug = debug
     ctx.rate_limit = rate_limit
+    ctx.confirm = not no_confirm
 
 
 # Add commands
