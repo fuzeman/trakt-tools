@@ -23,15 +23,15 @@ class CreateBackupTask(Task):
         WatchlistHandler
     ]
 
-    def __init__(self, backup_dir, per_page=1000, debug=False, confirm=True, rate_limit=20):
+    def __init__(self, backup_dir, per_page=1000, debug=False, rate_limit=20, assume_yes=False):
         super(CreateBackupTask, self).__init__(
             debug=debug,
             rate_limit=rate_limit
         )
 
+        self.assume_yes = assume_yes
         self.backup_dir = backup_dir
         self.per_page = per_page
-        self.confirm = confirm
 
     def run(self, token):
         log.debug('run()')
@@ -56,7 +56,7 @@ class CreateBackupTask(Task):
         print('Logged in as %r' % profile.username)
         print()
 
-        if self.confirm and not boolean_input('Would you like to continue?', default=True):
+        if not self.assume_yes and not boolean_input('Would you like to continue?', default=True):
             exit(0)
 
         print()
