@@ -49,9 +49,15 @@ Commands
     Usage: trakt_tools [OPTIONS] COMMAND [ARGS]...
 
     Options:
-      --debug / --no-debug  Display debug messages. (default: disabled)
+      --debug / --no-debug  Display debug messages.
       --rate-limit INTEGER  Maximum number of requests per minute. (default: 20)
       --help                Show this message and exit.
+
+    Commands:
+      history:duplicates:merge  Merge duplicate history records
+      history:duplicates:scan   Scan for duplicate history records
+      profile:backup:apply      Apply backup to a Trakt.tv profile (history)
+      profile:backup:create     Create backup of a Trakt.tv profile.
 
 ````````````````````````````````
 :code:`history:duplicates:merge`
@@ -64,9 +70,9 @@ Commands
       Merge duplicate history records
 
     Options:
-      --token TEXT            Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
+      --token TEXT            Trakt.tv authentication token. (default: "TRAKT_TOKEN" or Prompt)
       --backup-dir TEXT       Directory that backups should be stored in. (default: "./backups")
-      --delta-max INTEGER     Maximum delta between history records to consider as duplicate (in seconds). (default: 600)
+      --delta-max INTEGER     Maximum delta between history records to consider as duplicate. (in seconds) (default: 600)
       --per-page INTEGER      Request page size. (default: 1000)
       --backup / --no-backup  Backup profile before applying any changes. (default: prompt)
       --review / --no-review  Review each action before applying them. (default: prompt)
@@ -83,8 +89,8 @@ Commands
       Scan for duplicate history records
 
     Options:
-      --token TEXT         Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
-      --delta-max INTEGER  Maximum delta between history records to consider as duplicate (in seconds). (default: 600)
+      --token TEXT         Trakt.tv authentication token. (default: "TRAKT_TOKEN" or Prompt)
+      --delta-max INTEGER  Maximum delta between history records to consider as duplicate. (in seconds) (default: 600)
       --per-page INTEGER   Request page size. (default: 1000)
       --help               Show this message and exit.
 
@@ -101,13 +107,13 @@ Commands
       Only history can be applied to your profile currently. Support for applying collection,
       playback, ratings, and watchlist data has not been implemented yet.
 
-      Note: History already on your profile will be duplicated, `history:duplicates:merge` can be
-      run afterwards to merge any duplicates in your history.
+      Note: History already on your profile will be duplicated, `history:duplicates:merge` can be run
+      afterwards to merge any duplicates in your history.
 
       BACKUP_ZIP is the location of the zip file created by the profile:history:backup command
 
     Options:
-      --token TEXT  Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
+      --token TEXT  Trakt.tv authentication token. (default: "TRAKT_TOKEN" or Prompt)
       --help        Show this message and exit.
 
 `````````````````````````````
@@ -118,10 +124,11 @@ Commands
 
     Usage: trakt_tools profile:backup:create [OPTIONS]
 
-      Create backup of a Trakt.tv profile
+      Create backup of a Trakt.tv profile.
 
     Options:
-      --token TEXT        Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
+      -y, --yes           Automatic yes to confirmation prompts.
+      --token TEXT        Trakt.tv authentication token. (default: "TRAKT_TOKEN" or Prompt)
       --backup-dir TEXT   Directory that backups should be stored in. (default: "./backups")
       --per-page INTEGER  Request page size. (default: 1000)
       --help              Show this message and exit.

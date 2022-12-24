@@ -11,7 +11,7 @@ import os
 @click.option(
     '--token',
     default=os.environ.get('TRAKT_TOKEN') or None,
-    help='Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)'
+    help='Trakt.tv authentication token. (default: "TRAKT_TOKEN" or Prompt)'
 )
 @click.option(
     '--delta-max',
