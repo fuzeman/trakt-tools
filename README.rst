@@ -64,7 +64,7 @@ Commands
       Merge duplicate history records
 
     Options:
-      --token TEXT            Trakt.tv authentication token. (default: prompt)
+      --token TEXT            Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
       --backup-dir TEXT       Directory that backups should be stored in. (default: "./backups")
       --delta-max INTEGER     Maximum delta between history records to consider as duplicate (in seconds). (default: 600)
       --per-page INTEGER      Request page size. (default: 1000)
@@ -83,7 +83,7 @@ Commands
       Scan for duplicate history records
 
     Options:
-      --token TEXT         Trakt.tv authentication token. (default: prompt)
+      --token TEXT         Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
       --delta-max INTEGER  Maximum delta between history records to consider as duplicate (in seconds). (default: 600)
       --per-page INTEGER   Request page size. (default: 1000)
       --help               Show this message and exit.
@@ -107,7 +107,7 @@ Commands
       BACKUP_ZIP is the location of the zip file created by the profile:history:backup command
 
     Options:
-      --token TEXT  Trakt.tv authentication token. (default: prompt)
+      --token TEXT  Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
       --help        Show this message and exit.
 
 `````````````````````````````
@@ -121,7 +121,7 @@ Commands
       Create backup of a Trakt.tv profile
 
     Options:
-      --token TEXT        Trakt.tv authentication token. (default: prompt)
+      --token TEXT        Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)
       --backup-dir TEXT   Directory that backups should be stored in. (default: "./backups")
       --per-page INTEGER  Request page size. (default: 1000)
       --help              Show this message and exit.

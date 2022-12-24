@@ -9,8 +9,8 @@ import os
 @click.argument('backup_zip', type=click.Path(exists=True))
 @click.option(
     '--token',
-    default=None,
-    help='Trakt.tv authentication token. (default: prompt)'
+    default=os.environ.get('TRAKT_TOKEN') or None,
+    help='Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)'
 )
 def profile_backup_apply(backup_zip, token):
     """Apply backup to a Trakt.tv profile.
