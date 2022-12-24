@@ -4,13 +4,14 @@ from trakt_tools.core.authentication import authenticate
 from trakt_tools.tasks import ScanHistoryDuplicatesTask
 
 import click
+import os
 
 
 @click.command('history:duplicates:scan')
 @click.option(
     '--token',
-    default=None,
-    help='Trakt.tv authentication token. (default: prompt)'
+    default=os.environ.get('TRAKT_TOKEN') or None,
+    help='Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)'
 )
 @click.option(
     '--delta-max',

@@ -15,8 +15,8 @@ import os
 )
 @click.option(
     '--token',
-    default=None,
-    help='Trakt.tv authentication token. (default: prompt)'
+    default=os.environ.get('TRAKT_TOKEN') or None,
+    help='Trakt.tv authentication token. Overwrites TRAKT_TOKEN env var. (default: prompt)'
 )
 @click.option(
     '--backup-dir',
