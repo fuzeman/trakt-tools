@@ -4,6 +4,7 @@
 /.tox
 /backups
 /build
+/dist
 
 /*.egg-info
 /test-results.xml
