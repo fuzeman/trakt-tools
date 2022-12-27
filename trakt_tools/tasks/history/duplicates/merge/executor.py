@@ -86,10 +86,12 @@ class Executor(object):
                 )
             except (ClientError, ServerError, RequestException) as ex:
                 # Retrieve error message
-                message = ex.message
+                message = str(ex)
 
                 if isinstance(ex, (ClientError, ServerError)):
                     _, message = ex.error
+                elif hasattr(ex, 'message'):
+                    message = ex.message
 
                 # Prompt for request retry
                 print('Unable to remove %d history record(s): %s' % (len(ids), message))
