@@ -1,3 +1,13 @@
+0.2.2 (2022-12-28)
+------------------
+**Added**
+ - Authentication token can be provided with the `TRAKT_TOKEN` environment variable (@outdooracorn)
+ - `profile:backup:create` now accepts a `-y/--yes` option to ignore the confirmation input (@glensc)
+
+**Changed**
+ - Support for click v8.1 (@outdooracorn)
+ - Support for trakt.py v4.4 (@outdooracorn)
+
 0.2.1 (2020-04-22)
 ------------------
 **Fixed**
