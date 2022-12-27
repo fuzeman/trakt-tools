@@ -3,4 +3,5 @@ recursive-include examples *.py
 recursive-include trakt_tools *.py
 recursive-include tests *
 include AUTHORS *requirements.txt .coveragerc .gitignore *.cfg *.in *.ini *.py *.rst *.yml
+exclude .github
 global-exclude *.iml *.pyc

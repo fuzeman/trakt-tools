@@ -30,7 +30,9 @@ jobs:
       - name: Upload assets to GitHub
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/trakt-tools-*
+          files: |
+            dist/trakt-tools-*
+            dist/trakt_tools-*
 
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
