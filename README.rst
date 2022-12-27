@@ -1,8 +1,8 @@
 ===========
 trakt-tools
 ===========
-.. image:: https://img.shields.io/travis/fuzeman/trakt-tools.svg?maxAge=2592000?style=flat-square
-    :target: https://travis-ci.org/fuzeman/trakt-tools
+.. image:: https://github.com/fuzeman/trakt-tools/actions/workflows/test.yml/badge.svg?branch=master
+    :target: https://github.com/fuzeman/trakt-tools/actions/workflows/test.yml
 .. image:: https://img.shields.io/github/release/fuzeman/trakt-tools.svg?maxAge=2592000?style=flat-square
     :target: https://github.com/fuzeman/trakt-tools/releases/latest
 .. image:: https://img.shields.io/pypi/v/trakt-tools.svg?maxAge=2592000?style=flat-square
