@@ -1,4 +1,5 @@
 from __future__ import print_function
+import time
 
 from trakt_tools.core.input import boolean_input
 from ..core.formatter import Formatter
@@ -92,6 +93,14 @@ class Executor(object):
                     _, message = ex.error
                 elif hasattr(ex, 'message'):
                     message = ex.message
+
+                # Rate limit exceeded
+                if isinstance(ex, ClientError) and ex.status_code == 429:
+                    if 'retry-after' in ex.response.headers:
+                        retry_after = int(ex.response.headers['retry-after'])
+                        print(f'Exceeded rate limit, waiting for {retry_after} seconds...')
+                        time.sleep(retry_after)
+                        continue
 
                 # Prompt for request retry
                 print('Unable to remove %d history record(s): %s' % (len(ids), message))
