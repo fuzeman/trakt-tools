@@ -1,5 +1,4 @@
 from __future__ import print_function
-import time
 
 from trakt_tools.core.input import boolean_input
 from ..core.formatter import Formatter
@@ -13,10 +12,9 @@ log = logging.getLogger(__name__)
 
 
 class Executor(object):
-    def __init__(self, review=True, batch_size=200, rate_limit=20):
+    def __init__(self, review=True, batch_size=200):
         self.review = review
         self.batch_size = batch_size
-        self.rate_limit = rate_limit
 
     def process_shows(self, profile, shows):
         log.debug('Executing actions on %d shows...', len(shows))
