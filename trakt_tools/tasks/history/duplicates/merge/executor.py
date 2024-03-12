@@ -38,6 +38,7 @@ class Executor(object):
 
             # Remove history records
             for x in six.moves.xrange(0, len(ids), self.batch_size):
+                profile._rate_limit()
                 self._remove_records(ids[x:x + self.batch_size])
 
             print()
@@ -65,6 +66,7 @@ class Executor(object):
 
             # Remove history records
             for x in six.moves.xrange(0, len(ids), self.batch_size):
+                profile._rate_limit()
                 self._remove_records(ids[x:x + self.batch_size])
 
             print()
