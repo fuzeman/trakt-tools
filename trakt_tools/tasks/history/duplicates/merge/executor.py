@@ -13,9 +13,10 @@ log = logging.getLogger(__name__)
 
 
 class Executor(object):
-    def __init__(self, review=True, batch_size=200):
+    def __init__(self, review=True, batch_size=200, rate_limit=20):
         self.review = review
         self.batch_size = batch_size
+        self.rate_limit = rate_limit
 
     def process_shows(self, profile, shows):
         log.debug('Executing actions on %d shows...', len(shows))
@@ -39,6 +40,7 @@ class Executor(object):
 
             # Remove history records
             for x in six.moves.xrange(0, len(ids), self.batch_size):
+                profile._rate_limit()
                 self._remove_records(ids[x:x + self.batch_size])
 
             print()
@@ -66,6 +68,7 @@ class Executor(object):
 
             # Remove history records
             for x in six.moves.xrange(0, len(ids), self.batch_size):
+                profile._rate_limit()
                 self._remove_records(ids[x:x + self.batch_size])
 
             print()
@@ -93,14 +96,6 @@ class Executor(object):
                     _, message = ex.error
                 elif hasattr(ex, 'message'):
                     message = ex.message
-
-                # Rate limit exceeded
-                if isinstance(ex, ClientError) and ex.status_code == 429:
-                    if 'retry-after' in ex.response.headers:
-                        retry_after = int(ex.response.headers['retry-after'])
-                        print(f'Exceeded rate limit, waiting for {retry_after} seconds...')
-                        time.sleep(retry_after)
-                        continue
 
                 # Prompt for request retry
                 print('Unable to remove %d history record(s): %s' % (len(ids), message))

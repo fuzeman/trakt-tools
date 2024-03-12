@@ -106,7 +106,10 @@ class MergeHistoryDuplicatesTask(Task):
             review = boolean_input('Review every action?', default=True)
             print()
 
-        executor = Executor(review)
+        executor = Executor(
+            review,
+            rate_limit=self.rate_limit
+            )
 
         if not executor.process_shows(profile, self.scanner.shows):
             return False
